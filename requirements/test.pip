@@ -1,0 +1,5 @@
+parameterized
+selenium==4.18.1
+httpretty==1.1.4
+mock
+sure
