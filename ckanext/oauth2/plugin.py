@@ -25,7 +25,7 @@ from ckanext.oauth2.oauth2 import OAuth2Helper
 import os
 
 from functools import partial
-from ckan import plugins
+import ckan.plugins as plugins
 from ckan.common import g
 from ckan.plugins import toolkit
 from urllib.parse import urlparse
@@ -87,7 +87,7 @@ class OAuth2Plugin(plugins.SingletonPlugin):
 
     plugins.implements(plugins.IAuthenticator, inherit=True)
     plugins.implements(plugins.IAuthFunctions, inherit=True)
-    plugins.implements(plugins.IRoutes, inherit=True)
+    # plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IConfigurer)
 
     def __init__(self, name=None):
