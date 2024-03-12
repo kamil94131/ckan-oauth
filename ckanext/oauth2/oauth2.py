@@ -23,7 +23,9 @@ from __future__ import unicode_literals
 
 import base64
 import ckan.model as model
-import db
+
+from ckanext.oauth2.constants import REDIRECT_URL, CAME_FROM_FIELD
+from ckanext.oauth2.db import init_db, UserToken
 import json
 import logging
 from six.moves.urllib.parse import urljoin
@@ -38,18 +40,16 @@ import six
 
 import jwt
 
-import constants
-
 
 log = logging.getLogger(__name__)
 
 
 def generate_state(url):
-    return b64encode(bytes(json.dumps({constants.CAME_FROM_FIELD: url})))
+    return b64encode(bytes(json.dumps({CAME_FROM_FIELD: url})))
 
 
 def get_came_from(state):
-    return json.loads(b64decode(state)).get(constants.CAME_FROM_FIELD, '/')
+    return json.loads(b64decode(state)).get(CAME_FROM_FIELD, '/')
 
 
 REQUIRED_CONF = ("authorization_endpoint", "token_endpoint", "client_id", "client_secret", "profile_api_url", "profile_api_user_field", "profile_api_mail_field")
@@ -78,10 +78,10 @@ class OAuth2Helper(object):
         self.profile_api_mail_field = six.text_type(os.environ.get('CKAN_OAUTH2_PROFILE_API_MAIL_FIELD', toolkit.config.get('ckan.oauth2.profile_api_mail_field', ''))).strip()
         self.profile_api_groupmembership_field = six.text_type(os.environ.get('CKAN_OAUTH2_PROFILE_API_GROUPMEMBERSHIP_FIELD', toolkit.config.get('ckan.oauth2.profile_api_groupmembership_field', ''))).strip()
         self.sysadmin_group_name = six.text_type(os.environ.get('CKAN_OAUTH2_SYSADMIN_GROUP_NAME', toolkit.config.get('ckan.oauth2.sysadmin_group_name', ''))).strip()
-        self.redirect_uri = urljoin(urljoin(toolkit.config.get('ckan.site_url', 'http://localhost:5000'), toolkit.config.get('ckan.root_path')), constants.REDIRECT_URL)
+        self.redirect_uri = urljoin(urljoin(toolkit.config.get('ckan.site_url', 'http://localhost:5000'), toolkit.config.get('ckan.root_path')), REDIRECT_URL)
 
         # Init db
-        db.init_db(model)
+        init_db(model)
 
         missing = [key for key in REQUIRED_CONF if getattr(self, key, "") == ""]
         if missing:
@@ -274,7 +274,7 @@ class OAuth2Helper(object):
         toolkit.response.location = came_from
 
     def get_stored_token(self, user_name):
-        user_token = db.UserToken.by_user_name(user_name=user_name)
+        user_token = UserToken.by_user_name(user_name=user_name)
         if user_token:
             return {
                 'access_token': user_token.access_token,
@@ -285,10 +285,10 @@ class OAuth2Helper(object):
 
     def update_token(self, user_name, token):
 
-        user_token = db.UserToken.by_user_name(user_name=user_name)
+        user_token = UserToken.by_user_name(user_name=user_name)
         # Create the user if it does not exist
         if not user_token:
-            user_token = db.UserToken()
+            user_token = UserToken()
             user_token.user_name = user_name
         # Save the new token
         user_token.access_token = token['access_token']
