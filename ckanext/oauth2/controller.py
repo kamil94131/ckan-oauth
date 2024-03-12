@@ -27,7 +27,7 @@ from ckan.common import session
 import ckan.lib.helpers as helpers
 import ckan.lib.base as base
 import ckan.plugins.toolkit as toolkit
-import oauth2
+from ckanext.oauth2.oauth2 import OAuth2Helper, get_came_from
 
 from ckanext.oauth2.plugin import _get_previous_page
 
@@ -38,7 +38,7 @@ log = logging.getLogger(__name__)
 class OAuth2Controller(base.BaseController):
 
     def __init__(self):
-        self.oauth2helper = oauth2.OAuth2Helper()
+        self.oauth2helper = OAuth2Helper()
 
     def login(self):
         log.debug('login')
@@ -77,7 +77,7 @@ class OAuth2Controller(base.BaseController):
                     error_description = type(e).__name__
 
             toolkit.response.status_int = 302
-            redirect_url = oauth2.get_came_from(toolkit.request.params.get('state'))
+            redirect_url = get_came_from(toolkit.request.params.get('state'))
             redirect_url = '/' if redirect_url == constants.INITIAL_PAGE else redirect_url
             toolkit.response.location = redirect_url
             helpers.flash_error(error_description)

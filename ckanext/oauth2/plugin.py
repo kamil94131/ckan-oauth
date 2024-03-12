@@ -21,7 +21,7 @@
 from __future__ import unicode_literals
 
 import logging
-import oauth2
+from ckanext.oauth2.oauth2 import OAuth2Helper
 import os
 
 from functools import partial
@@ -94,7 +94,7 @@ class OAuth2Plugin(plugins.SingletonPlugin):
         '''Store the OAuth 2 client configuration'''
         log.debug('Init OAuth2 extension')
 
-        self.oauth2helper = oauth2.OAuth2Helper()
+        self.oauth2helper = OAuth2Helper()
 
     def before_map(self, m):
         log.debug('Setting up the redirections to the OAuth2 service')
