@@ -4,7 +4,7 @@ from ckan.plugins import toolkit as tk
 import ckan.lib.helpers as h
 import ckan.model as model
 from ckan.common import g
-from ckan.views.user import set_repoze_user, RequestResetView
+from ckan.views.user import RequestResetView
 from ckanext.keycloak.keycloak import KeycloakClient
 import ckanext.keycloak.helpers as helpers
 from os import environ
@@ -38,7 +38,9 @@ def _log_user_into_ckan(resp):
         user_id = "{},1".format(g.user_obj.id)
     else:
         user_id = g.user
-    set_repoze_user(user_id, resp)
+
+    user_obj = model.User.get(user_id)
+    login_user(user_obj)
 
     log.info(u'User {0}<{1}> logged in successfully'.format(g.user_obj.name, g.user_obj.email))
 
@@ -98,9 +100,13 @@ def reset_password():
         return tk.redirect_to(tk.url_for('user.login'))
     return RequestResetView().post()
 
+def hello_world():
+    return "hello world!"
+
 keycloak.add_url_rule('/sso', view_func=sso)
 keycloak.add_url_rule('/sso_login', view_func=sso_login)
 keycloak.add_url_rule('/reset_password', view_func=reset_password, methods=['POST'])
+keycloak.add_url_rule('/hello', view_func=hello_world, methods=['GET'])
 
 def get_blueprint():
     return keycloak
