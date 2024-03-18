@@ -45,14 +45,15 @@ def _log_user_into_ckan(resp):
     log.info(u'User {0}<{1}> logged in successfully'.format(g.user_obj.name, g.user_obj.email))
 
 def sso():
-    log.info("SSO Login")
-    auth_url = None
-    try:
-        auth_url = client.get_auth_url(redirect_uri=redirect_uri)
-    except Exception as e:
-        log.error("Error getting auth url: {}".format(e))
-        return tk.abort(500, "Error getting auth url: {}".format(e))
-    return tk.redirect_to(auth_url)
+    # log.info("SSO Login")
+    # auth_url = None
+    # try:
+    #     auth_url = client.get_auth_url(redirect_uri=redirect_uri)
+    # except Exception as e:
+    #     log.error("Error getting auth url: {}".format(e))
+    #     return tk.abort(500, "Error getting auth url: {}".format(e))
+    # return tk.redirect_to(auth_url)
+    return tk.redirect_to(tk.url_for('user.test1'))
 
 def sso_login():
     data = tk.request.args
