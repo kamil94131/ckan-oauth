@@ -14,7 +14,7 @@ class KeycloakPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.ITemplateHelpers)
-    plugins.implements(plugins.IResourceView, inherit=True)
+    plugins.implements(plugins.IResourceView)
 
     # IConfigurer
 

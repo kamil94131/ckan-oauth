@@ -1,5 +1,5 @@
 import logging
-from flask import Blueprint
+from flask import Blueprint, render_template
 from ckan.plugins import toolkit as tk
 import ckan.lib.helpers as h
 import ckan.model as model
@@ -104,10 +104,14 @@ def reset_password():
 def hello_world():
     return "hello world!"
 
+def test1():
+    return render_template("user.test1.html")
+
 keycloak.add_url_rule('/sso', view_func=sso)
 keycloak.add_url_rule('/sso_login', view_func=sso_login)
 keycloak.add_url_rule('/reset_password', view_func=reset_password, methods=['POST'])
 keycloak.add_url_rule('/hello', view_func=hello_world, methods=['GET'])
+keycloak.add_url_rule('/test1', 'test1', test1, methods=['GET'])
 
 def get_blueprint():
     return keycloak
