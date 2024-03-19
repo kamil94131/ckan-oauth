@@ -1,5 +1,5 @@
 import logging
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, render_template_string
 from ckan.plugins import toolkit as tk
 import ckan.lib.helpers as h
 import ckan.model as model
@@ -104,7 +104,7 @@ def hello_world():
     return "hello world!"
 
 def test1():
-    return render_template("user.test1.html")
+    return render_template_string("<div>hello world</div>")
 
 keycloak.add_url_rule('/sso', view_func=sso)
 keycloak.add_url_rule('/sso_login', view_func=sso_login)
