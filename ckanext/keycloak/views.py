@@ -111,7 +111,7 @@ keycloak.add_url_rule('/sso', view_func=sso)
 keycloak.add_url_rule('/sso_login', view_func=sso_login)
 keycloak.add_url_rule('/reset_password', view_func=reset_password, methods=['POST'])
 keycloak.add_url_rule('/hello', view_func=hello_world, methods=['GET'])
-keycloak.add_url_rule('/test1', 'test1', test1, methods=['GET'])
+keycloak.add_url_rule('/test1', 'test1', view_func=test1, methods=['GET'])
 
 def get_blueprint():
     return keycloak
