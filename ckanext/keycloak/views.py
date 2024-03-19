@@ -104,7 +104,7 @@ def hello_world():
     return "hello world!"
 
 def test1():
-    return render_template_string("<div>hello world</div>")
+    return render_template("keycloak.test1")
 
 keycloak.add_url_rule('/sso', view_func=sso)
 keycloak.add_url_rule('/sso_login', view_func=sso_login)
