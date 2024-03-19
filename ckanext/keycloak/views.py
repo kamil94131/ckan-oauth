@@ -85,10 +85,6 @@ def sso_login():
     else:
         return tk.redirect_to(tk.url_for('user.login'))
     
-def sso_logout():
-    tk.logout_user()
-    client.
-
 def reset_password():
     email = tk.request.form.get('user', None)
     if '@' not in email:
@@ -114,7 +110,6 @@ def test1():
 
 keycloak.add_url_rule('/sso', view_func=sso)
 keycloak.add_url_rule('/sso_login', view_func=sso_login)
-keycloak.add_url_rule('/sso_logout', view_func=sso_logout)
 keycloak.add_url_rule('/reset_password', view_func=reset_password, methods=['POST'])
 keycloak.add_url_rule('/hello', view_func=hello_world, methods=['GET'])
 keycloak.add_url_rule('/test1', 'test1', view_func=test1, methods=['GET'])
