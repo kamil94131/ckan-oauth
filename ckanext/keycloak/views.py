@@ -9,7 +9,7 @@ from ckanext.keycloak.keycloak import KeycloakClient
 import ckanext.keycloak.helpers as helpers
 from os import environ
 
-log = logging.getLogger(__name__)
+log = logging.getLogger()
 
 keycloak = Blueprint('keycloak', __name__, url_prefix='/user')
 
@@ -42,10 +42,10 @@ def _log_user_into_ckan(resp):
     user_obj = model.User.get(user_id)
     login_user(user_obj)
 
-    log.info(u'User {0}<{1}> logged in successfully'.format(g.user_obj.name, g.user_obj.email))
+    log.debug(u'User {0}<{1}> logged in successfully'.format(g.user_obj.name, g.user_obj.email))
 
 def sso():
-    log.info("SSO Login")
+    log.debug("SSO Login")
     auth_url = None
     try:
         auth_url = client.get_auth_url(redirect_uri=redirect_uri)
@@ -56,11 +56,11 @@ def sso():
 
 def sso_login():
     data = tk.request.args
-    log.info("Login args: {}".format(tk.request.args))
+    log.debug("Login args: {}".format(tk.request.args))
     token = client.get_token(data['code'], redirect_uri)
-    log.info("Token: {}".format(token))
+    log.debug("Token: {}".format(token))
     userinfo = client.get_user_info(token)
-    log.info("SSO Login: {}".format(userinfo))
+    log.debug("SSO Login: {}".format(userinfo))
     if userinfo:
         user_dict = {
             'name': helpers.ensure_unique_username_from_email(userinfo['preferred_username']),
@@ -80,7 +80,7 @@ def sso_login():
         response = tk.redirect_to(tk.url_for('user.me', context))
 
         _log_user_into_ckan(response)
-        log.info("Logged in success")
+        log.debug("Logged in success")
         return response
     else:
         return tk.redirect_to(tk.url_for('user.login'))
@@ -88,16 +88,16 @@ def sso_login():
 def reset_password():
     email = tk.request.form.get('user', None)
     if '@' not in email:
-        log.info(f'User requested reset link for invalid email: {email}')
+        log.debug(f'User requested reset link for invalid email: {email}')
         h.flash_error('Invalid email address')
         return tk.redirect_to(tk.url_for('user.request_reset'))
     user = model.User.by_email(email)
     if not user:
-        log.info(u'User requested reset link for unknown user: {}'.format(email))
+        log.debug(u'User requested reset link for unknown user: {}'.format(email))
         return tk.redirect_to(tk.url_for('user.login'))
     user_extras = user[0].plugin_extras
     if user_extras and user_extras.get('idp', None) == 'google':
-        log.info(u'User requested reset link for google user: {}'.format(email))
+        log.debug(u'User requested reset link for google user: {}'.format(email))
         h.flash_error('Invalid email address')
         return tk.redirect_to(tk.url_for('user.login'))
     return RequestResetView().post()
