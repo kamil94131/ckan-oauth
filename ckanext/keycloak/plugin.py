@@ -5,8 +5,10 @@ from ckanext.keycloak.views import get_blueprint
 from ckanext.keycloak import helpers as h
 import ckan.plugins as p
 import logging
+from flask import Flask
 
-log = logging.getLogger()
+# log = logging.getLogger(__name__)
+app = Flask(__name__)
 
 ignore_empty = p.toolkit.get_validator('ignore_empty')
 unicode_safe = p.toolkit.get_validator('unicode_safe')
@@ -21,11 +23,11 @@ class KeycloakPlugin(plugins.SingletonPlugin):
 
     def update_config(self, config_):
 
-        log.setLevel(logging.INFO)
+        app.logger.setLevel(logging.INFO)
         stream_handler = logging.StreamHandler()
         stream_handler.setLevel(logging.INFO)
-        log.addHandler(stream_handler)
-        log.info("hello world info")
+        app.logger.addHandler(stream_handler)
+        app.logger.info("hello world info")
 
         toolkit.add_template_directory(config_, 'templates')
         toolkit.add_public_directory(config_, 'public')
