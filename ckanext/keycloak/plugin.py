@@ -21,10 +21,11 @@ class KeycloakPlugin(plugins.SingletonPlugin):
 
     def update_config(self, config_):
 
-        log.setLevel(logging.DEBUG)
+        log.setLevel(logging.INFO)
         stream_handler = logging.StreamHandler()
-        stream_handler.setLevel(logging.DEBUG)
+        stream_handler.setLevel(logging.INFO)
         log.addHandler(stream_handler)
+        log.info("hello world info")
 
         toolkit.add_template_directory(config_, 'templates')
         toolkit.add_public_directory(config_, 'public')
